@@ -8,7 +8,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     
-    <!-- Script EmailJS -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="text/javascript">
         (function() {
@@ -482,7 +481,6 @@
         </div>
     </section>
 
-    <!-- Section Nos Engagements -->
     <section>
         <div class="commitments-grid">
             <div class="commitment-card">
@@ -552,7 +550,6 @@
         </div>
     </section>
 
-    <!-- Section Processus -->
     <section id="processus" style="background: rgba(255,255,255,0.01);">
         <div class="section-header">
             <h2>Notre Processus</h2>
@@ -605,7 +602,6 @@
         </div>
     </section>
 
-    <!-- Section Avis Clients -->
     <section>
         <div class="section-header">
             <h2>Retours d'Expérience</h2>
@@ -630,7 +626,6 @@
         </div>
     </section>
 
-    <!-- Section FAQ -->
     <section id="faq">
         <div class="section-header">
             <h2>Foire Aux Questions</h2>
@@ -675,7 +670,6 @@
         <p>&copy; 2026 VIPER Clean. Tous droits réservés.</p>
     </footer>
 
-    <!-- Script de gestion de l'envoi d'e-mails -->
     <script>
         document.getElementById('booking-form').addEventListener('submit', function(event) {
             event.preventDefault();
@@ -685,11 +679,17 @@
             submitBtn.disabled = true;
 
             const serviceID = 'service_fodaxcd';
-            const templateID = 'template_svshwyv';
+            const adminTemplateID = 'template_svshwyv';
+            const clientTemplateID = 'template_0ya3ily';
 
-            emailjs.sendForm(serviceID, templateID, this)
+            // 1. Envoi du mail pour TOI
+            emailjs.sendForm(serviceID, adminTemplateID, this)
                 .then(() => {
-                    alert('Votre demande a bien été envoyée ! Nous vous recontacterons sous peu.');
+                    // 2. Envoi du mail de confirmation pour LE CLIENT
+                    return emailjs.sendForm(serviceID, clientTemplateID, this);
+                })
+                .then(() => {
+                    alert('Votre demande a bien été envoyée ! Un mail de confirmation vous a été envoyé.');
                     document.getElementById('booking-form').reset();
                 })
                 .catch((error) => {
@@ -705,4 +705,3 @@
 
 </body>
 </html>
-
