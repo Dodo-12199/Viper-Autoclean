@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIPER CLEAN — Soin Automobile d'Exception</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- Script EmailJS -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+            emailjs.init("rTaOb9GwvAz-oi2SO");
+        })();
+    </script>
+
+    <style>
+        :root {
+            --bg: #0a0c10;
+            --surface: #12161f;
+            --surface-hover: #1a202c;
+            --primary: #3b82f6;
+            --primary-glow: rgba(59, 130, 246, 0.35);
+            --neon-glow: rgba(59, 130, 246, 0.6);
+            --text: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border: rgba(255, 255, 255, 0.08);
+            --glass: rgba(18, 22, 31, 0.75);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.25rem 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--glass);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: #fff;
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #fff;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8rem 8% 4rem;
+            position: relative;
+            background: radial-gradient(circle at 50% 20%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+                        url('https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=2000&q=80') center/cover no-repeat;
+            background-blend-mode: overlay;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            text-align: center;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: var(--primary);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -1px;
+            background: linear-gradient(180deg, #FFFFFF 0%, #94A3B8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Boutons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.9rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 4px 20px var(--primary-glow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(59, 130, 246, 0.5);
+        }
+
+        /* Layout Grid Sections */
+        section {
+            padding: 6rem 8%;
+        }
+
+        .section-header {
+            margin-bottom: 4rem;
+            text-align: center;
+        }
+
+        .section-header h2 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        /* Cartes & Grilles */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 2.5rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            border-color: rgba(59, 130, 246, 0.4);
+            transform: translateY(-5px);
+            background: var(--surface-hover);
+        }
+
+        .card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Engagements & Logos Néon 3D */
+        .commitments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .commitment-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 2.5rem 1.8rem;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .commitment-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(59, 130, 246, 0.4);
+        }
+
+        .neon-icon-box {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 1.5rem auto;
+            border-radius: 16px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.25) 0%, rgba(18, 22, 31, 0.9) 100%);
+            border: 1px solid rgba(59, 130, 246, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.3), inset 0 0 10px rgba(59, 130, 246, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .commitment-card:hover .neon-icon-box {
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.6), inset 0 0 15px rgba(59, 130, 246, 0.4);
+            transform: scale(1.08);
+            border-color: #60a5fa;
+        }
+
+        .neon-icon-box svg {
+            width: 30px;
+            height: 30px;
+            stroke: #60a5fa;
+            stroke-width: 2;
+            fill: none;
+            filter: drop-shadow(0 0 6px rgba(96, 165, 250, 0.8));
+        }
+
+        /* Processus */
+        .process-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .step-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 2rem;
+            border-radius: 16px;
+            position: relative;
+        }
+
+        .step-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            opacity: 0.4;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Tarif Unique */
+        .single-price-container {
+            max-width: 550px;
+            margin: 0 auto;
+        }
+
+        .price-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .price-card.featured {
+            border: 1px solid var(--primary);
+            background: linear-gradient(180deg, rgba(59, 130, 246, 0.08) 0%, var(--surface) 100%);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .price {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: #fff;
+            margin: 1.5rem 0;
+            letter-spacing: -1px;
+        }
+
+        .price span {
+            font-size: 1rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .features li {
+            color: var(--text-muted);
+            padding: 0.6rem 0;
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .features li::before {
+            content: "✓";
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        /* Avis */
+        .stars {
+            color: #f59e0b;
+            margin-bottom: 1rem;
+        }
+
+        .author {
+            margin-top: 1.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #fff;
+        }
+
+        /* FAQ Accordion */
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        details {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.2rem 1.5rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        details[open] {
+            background: var(--surface-hover);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        summary {
+            font-weight: 600;
+            font-size: 1.05rem;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        summary::after {
+            content: "+";
+            font-size: 1.4rem;
+            color: var(--primary);
+        }
+
+        details[open] summary::after {
+            content: "−";
+        }
+
+        details p {
+            color: var(--text-muted);
+            margin-top: 1rem;
+            font-size: 0.95rem;
+        }
+
+        /* Formulaire */
+        .contact-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 3rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        input, textarea {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            padding: 1rem;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            border-color: var(--primary);
+        }
+
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 3rem 8%;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .contact-box {
+                grid-template-columns: 1fr;
+            }
+            nav {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">VIPER <span>CLEAN</span></div>
+        <nav>
+            <a href="#services">Services</a>
+            <a href="#processus">Processus</a>
+            <a href="#tarif">Tarif</a>
+            <a href="#faq">FAQ</a>
+            <a href="#contact">Réservation</a>
+        </nav>
+        <a href="#contact" class="btn btn-primary" style="padding: 0.6rem 1.2rem; font-size: 0.85rem;">Réserver</a>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <span class="badge">Nettoyage Automobile Haute Précision</span>
+            <h1>L'art de la perfection automobile.</h1>
+            <p>Nettoyage complet intérieur et extérieur haute précision pour redonner un éclat neuf à votre véhicule.</p>
+            <a href="#tarif" class="btn btn-primary">Découvrir l'offre unique</a>
+        </div>
+    </section>
+
+    <!-- Section Nos Engagements -->
+    <section>
+        <div class="commitments-grid">
+            <div class="commitment-card">
+                <div class="neon-icon-box">
+                    <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10 2v2a2 2 0 0 1-2 2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-2a2 2 0 0 1-2-2V2"></path>
+                        <path d="M14 2H10"></path>
+                        <path d="M8.5 14h7"></path>
+                    </svg>
+                </div>
+                <h3>Produits Pro</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;">Shampooing pH neutre et formules certifiées sans risque pour vos surfaces.</p>
+            </div>
+
+            <div class="commitment-card">
+                <div class="neon-icon-box">
+                    <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        <path d="m9 12 2 2 4-4"></path>
+                    </svg>
+                </div>
+                <h3>Soin à la Main</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;">Nettoyage minutieux des moindres recoins inaccessible en station classique.</p>
+            </div>
+
+            <div class="commitment-card">
+                <div class="neon-icon-box">
+                    <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                </div>
+                <h3>Ponctualité</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;">Prise en charge à l'heure exacte et restitution dans les délais convenus.</p>
+            </div>
+
+            <div class="commitment-card">
+                <div class="neon-icon-box">
+                    <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                    </svg>
+                </div>
+                <h3>Résultat Garanti</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;">Contrôle qualité systématique avant la remise de vos clés.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="services">
+        <div class="section-header">
+            <h2>Notre Expertise</h2>
+            <p>Un soin complet exécuté avec une rigueur professionnelle.</p>
+        </div>
+        <div class="grid">
+            <div class="card">
+                <h3>Soin Intérieur Détaillé</h3>
+                <p>Aspiration approfondie, dépoussiérage minutieux des plastiques et vitres sans traces.</p>
+            </div>
+            <div class="card">
+                <h3>Lavage Extérieur Haute Pression</h3>
+                <p>Lavage à la main avec shampooing pH neutre et séchage microfibre pour protéger la carrosserie.</p>
+            </div>
+            <div class="card">
+                <h3>La Petite Touche En Plus</h3>
+                <p>Un parfum d'ambiance Arbre Magique offert pour prolonger la sensation de véhicule neuf.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Processus -->
+    <section id="processus" style="background: rgba(255,255,255,0.01);">
+        <div class="section-header">
+            <h2>Notre Processus</h2>
+            <p>Les 4 étapes d'un nettoyage méticuleux.</p>
+        </div>
+        <div class="process-grid">
+            <div class="step-card">
+                <div class="step-number">01</div>
+                <h3>Diagnostic</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;">Inspection de l'état général du véhicule et identification des zones spécifiques à traiter.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">02</div>
+                <h3>Intérieur</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;">Aspiration en profondeur, traitement des plastiques, conduits d'aération et surfaces vitrées.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">03</div>
+                <h3>Extérieur</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;">Prélavage haute pression, lavage manuel minutieux et séchage à la microfibre de finition.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">04</div>
+                <h3>Contrôle</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;">Vérification des détails, pose du parfum Arbre Magique offert et restitution.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="tarif">
+        <div class="section-header">
+            <h2>Tarif Unique</h2>
+            <p>Une formule claire et sans surprise pour un entretien complet.</p>
+        </div>
+        <div class="single-price-container">
+            <div class="card price-card featured">
+                <div>
+                    <span class="badge">Formule Complète</span>
+                    <h3>Formule Nettoyage Édition</h3>
+                    <div class="price">70 € <span>/ véhicule</span></div>
+                    <ul class="features">
+                        <li>Nettoyage intérieur / extérieur</li>
+                        <li>Nettoyage des vitres</li>
+                        <li>Nettoyage de la poussière</li>
+                        <li>Arbre Magique offert</li>
+                    </ul>
+                </div>
+                <a href="#contact" class="btn btn-primary" style="width: 100%;">Réserver ce forfait</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Avis Clients -->
+    <section>
+        <div class="section-header">
+            <h2>Retours d'Expérience</h2>
+            <p>Ce que disent nos clients après leur passage.</p>
+        </div>
+        <div class="grid">
+            <div class="card">
+                <div class="stars">★★★★★</div>
+                <p>« Franchement, j'hésitais un peu au début, mais ma 208 était remplie de traces de chien dans le coffre et de sable. Je l'ai récupérée nickel chrome, plus une seule trace et ça sent bon le propre. Ça vaut largement les 70 €. »</p>
+                <div class="author">— Thomas M.</div>
+            </div>
+            <div class="card">
+                <div class="stars">★★★★★</div>
+                <p>« Rendez-vous pris la veille pour le lendemain. Accueil au top, travail soigné sur les vitres (marre des traces que je laissais moi-même...) et le petit sapin offert fait plaisir. Je repasserai sans hésiter ! »</p>
+                <div class="author">— Sophie L.</div>
+            </div>
+            <div class="card">
+                <div class="stars">★★★★★</div>
+                <p>« Nettoyage fait avant de remettre ma voiture en vente. Résultat : voiture partie en 48h. Ils sont allés gratter la poussière jusque dans les aérateurs et sous les sièges. Vrai boulot de pro ! »</p>
+                <div class="author">— Julien K.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section FAQ -->
+    <section id="faq">
+        <div class="section-header">
+            <h2>Foire Aux Questions</h2>
+            <p>Tout ce que vous devez savoir avant votre réservation.</p>
+        </div>
+        <div class="faq-container">
+            details>
+                <summary>Combien de temps dure la prestation ?</summary>
+                <p>Il faut compter en moyenne entre 2h et 2h30 d'intervention selon l'état initial du véhicule pour réaliser un soin complet intérieur et extérieur.</p>
+            </details>
+            <details>
+                <summary>Où s'effectue la prestation ?</summary>
+                <p>Contactez-nous directement au 07 50 01 15 03 pour fixer le lieu d'intervention lors de la confirmation de votre rendez-vous.</p>
+            </details>
+            <details>
+                <summary>Comment puis-je régler la prestation ?</summary>
+                <p>Le règlement de 70 € s'effectue sur place une fois le nettoyage terminé et validé avec vous.</p>
+            </details>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="contact-box">
+            <div>
+                <span class="badge">Réservation</span>
+                <h2 style="font-size: 2rem; margin-bottom: 1rem;">Réservez votre créneau.</h2>
+                <p style="color: var(--text-muted); margin-bottom: 2rem;">Remplissez le formulaire et nous vous recontacterons rapidement pour confirmer votre rendez-vous pour la prestation à 70 €.</p>
+                <p><strong>Contact :</strong> 07 50 01 15 03</p>
+            </div>
+            <form id="booking-form">
+                <input type="text" name="user_name" placeholder="Nom / Prénom" required>
+                <input type="email" name="user_email" placeholder="Adresse e-mail" required>
+                <input type="tel" name="user_phone" placeholder="Numéro de téléphone" required>
+                <textarea name="message" placeholder="Remarques ou informations complémentaires (facultatif)" rows="4"></textarea>
+                <button type="submit" id="submit-btn" class="btn btn-primary">Envoyer la demande</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 VIPER Clean. Tous droits réservés.</p>
+    </footer>
+
+    <!-- Script de gestion de l'envoi d'e-mails -->
+    <script>
+        document.getElementById('booking-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.innerText = 'Envoi en cours...';
+            submitBtn.disabled = true;
+
+            const serviceID = 'service_fodaxcd';
+            const templateID = 'template_svshwyv';
+
+            emailjs.sendForm(serviceID, templateID, this)
+                .then(() => {
+                    alert('Votre demande a bien été envoyée ! Nous vous recontacterons sous peu.');
+                    document.getElementById('booking-form').reset();
+                })
+                .catch((error) => {
+                    alert('Erreur lors de l\'envoi. Veuillez réessayer ou nous contacter par téléphone.');
+                    console.error('EmailJS Error:', error);
+                })
+                .finally(() => {
+                    submitBtn.innerText = 'Envoyer la demande';
+                    submitBtn.disabled = false;
+                });
+        });
+    </script>
+
+</body>
+</html>
