@@ -15,6 +15,8 @@
         })();
     </script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
     <style>
         :root {
             --bg: #0a0c10;
@@ -87,6 +89,38 @@
 
         nav a:hover {
             color: #fff;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* Menu 3 Traits Pro */
+        .menu-toggle {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 28px;
+            height: 19px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            z-index: 1001;
+        }
+
+        .menu-toggle span {
+            width: 100%;
+            height: 3px;
+            background-color: var(--text);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle:hover span {
+            background-color: var(--primary);
         }
 
         /* Hero Section */
@@ -424,7 +458,7 @@
             gap: 1.2rem;
         }
 
-        input, textarea {
+        input, textarea, select {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--border);
             padding: 1rem;
@@ -435,8 +469,80 @@
             transition: border-color 0.3s;
         }
 
-        input:focus, textarea:focus {
+        input:focus, textarea:focus, select:focus {
             border-color: var(--primary);
+        }
+
+        /* Side Drawer Espace Pro */
+        .pro-drawer {
+            position: fixed;
+            top: 0;
+            right: -420px;
+            width: 100%;
+            max-width: 420px;
+            height: 100vh;
+            background: var(--surface);
+            border-left: 1px solid var(--border);
+            z-index: 2000;
+            padding: 2.5rem 2rem;
+            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.8);
+            transition: right 0.4s ease;
+            overflow-y: auto;
+        }
+
+        .pro-drawer.active {
+            right: 0;
+        }
+
+        .pro-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 1999;
+            display: none;
+        }
+
+        .pro-overlay.active {
+            display: block;
+        }
+
+        .drawer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+        }
+
+        .drawer-close {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .drawer-close:hover {
+            color: #fff;
+        }
+
+        .pro-info-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.88rem;
+        }
+
+        .pro-info-card p {
+            color: var(--text-muted);
+            margin-bottom: 0.4rem;
         }
 
         footer {
@@ -469,8 +575,51 @@
             <a href="#faq">FAQ</a>
             <a href="#contact">Réservation</a>
         </nav>
-        <a href="#contact" class="btn btn-primary" style="padding: 0.6rem 1.2rem; font-size: 0.85rem;">Réserver</a>
+        <div class="header-actions">
+            <a href="#contact" class="btn btn-primary" style="padding: 0.6rem 1.2rem; font-size: 0.85rem;">Réserver</a>
+            <button class="menu-toggle" id="open-pro-drawer" aria-label="Menu Pro">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
     </header>
+
+    <div class="pro-overlay" id="pro-overlay"></div>
+    <div class="pro-drawer" id="pro-drawer">
+        <div class="drawer-header">
+            <h3>🔒 Espace Pro Administration</h3>
+            <button class="drawer-close" id="close-pro-drawer">&times;</button>
+        </div>
+
+        <div id="pro-auth-section">
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">Veuillez saisir le code d'administration pour déverrouiller l'espace pro.</p>
+            <input type="password" id="pro-passcode" placeholder="Code d'accès" style="width: 100%; margin-bottom: 1rem;">
+            <button type="button" id="btn-unlock-pro" class="btn btn-primary" style="width: 100%;">Se connecter</button>
+        </div>
+
+        <div id="pro-content-section" style="display: none;">
+            <div class="pro-info-card">
+                <p><strong>Raison Sociale :</strong> VIPER Clean</p>
+                <p><strong>Contact Direct :</strong> 07 50 01 15 03</p>
+                <p><strong>Tarif Référence :</strong> 70,00 € TTC</p>
+            </div>
+
+            <h4 style="margin-bottom: 1rem; border-top: 1px solid var(--border); padding-top: 1.5rem;">📄 Générateur de Devis PDF</h4>
+            <form id="quote-form">
+                <input type="text" id="quote-client" placeholder="Nom complet du client" required>
+                <input type="tel" id="quote-phone" placeholder="Téléphone client">
+                <select id="quote-service">
+                    <option value="Formule Nettoyage Édition">Formule Nettoyage Édition (70 €)</option>
+                    <option value="Soin Intérieur Sur Mesure">Soin Intérieur Sur Mesure</option>
+                    <option value="Lavage Extérieur Haute Précision">Lavage Extérieur Haute Précision</option>
+                </select>
+                <input type="number" id="quote-amount" placeholder="Montant (€)" value="70" required>
+                <textarea id="quote-notes" placeholder="Notes ou informations véhicule..." rows="3"></textarea>
+                <button type="button" id="btn-generate-quote" class="btn btn-primary" style="width: 100%;">Générer le Devis PDF</button>
+            </form>
+        </div>
+    </div>
 
     <section class="hero">
         <div class="hero-content">
@@ -671,6 +820,183 @@
     </footer>
 
     <script>
+        // Gestion de l'Espace Pro Drawer
+        const openProBtn = document.getElementById('open-pro-drawer');
+        const closeProBtn = document.getElementById('close-pro-drawer');
+        const proDrawer = document.getElementById('pro-drawer');
+        const proOverlay = document.getElementById('pro-overlay');
+        const btnUnlock = document.getElementById('btn-unlock-pro');
+        const passInput = document.getElementById('pro-passcode');
+        const authSection = document.getElementById('pro-auth-section');
+        const contentSection = document.getElementById('pro-content-section');
+
+        function toggleDrawer() {
+            proDrawer.classList.toggle('active');
+            proOverlay.classList.toggle('active');
+        }
+
+        openProBtn.addEventListener('click', toggleDrawer);
+        closeProBtn.addEventListener('click', toggleDrawer);
+        proOverlay.addEventListener('click', toggleDrawer);
+
+        // Authentification Admin
+        btnUnlock.addEventListener('click', function() {
+            if (passInput.value === 'D121028') {
+                authSection.style.display = 'none';
+                contentSection.style.display = 'block';
+            } else {
+                alert('Code d\'accès incorrect.');
+            }
+        });
+
+        // Générateur de Devis / Reçu interactif avec Téléchargement PDF
+        document.getElementById('btn-generate-quote').addEventListener('click', function() {
+            const client = document.getElementById('quote-client').value.trim();
+            const phone = document.getElementById('quote-phone').value.trim();
+            const service = document.getElementById('quote-service').value;
+            const amount = document.getElementById('quote-amount').value;
+            const notes = document.getElementById('quote-notes').value.trim();
+
+            if (!client) {
+                alert('Veuillez renseigner le nom du client.');
+                return;
+            }
+
+            const quoteNumber = 'DEV-' + Math.floor(1000 + Math.random() * 9000);
+            const currentDate = new Date().toLocaleDateString('fr-FR');
+
+            const printWin = window.open('', '', 'width=900,height=750');
+            printWin.document.write(`
+                <!DOCTYPE html>
+                <html lang="fr">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Devis ${quoteNumber} - VIPER CLEAN</title>
+                    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"><\/script>
+                    <style>
+                        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+                        body { background: #0a0c10; color: #f3f4f6; padding: 30px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+                        
+                        .action-bar { margin-bottom: 25px; display: flex; gap: 15px; width: 100%; max-width: 700px; justify-content: flex-end; }
+                        .btn-action { background: #3b82f6; color: #fff; border: none; padding: 12px 24px; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 0.95rem; transition: background 0.3s; }
+                        .btn-action:hover { background: #2563eb; }
+                        .btn-secondary { background: rgba(255,255,255,0.1); }
+                        .btn-secondary:hover { background: rgba(255,255,255,0.2); }
+
+                        .devis-container {
+                            background: #12161f;
+                            border: 1px solid rgba(255, 255, 255, 0.1);
+                            border-radius: 20px;
+                            padding: 40px;
+                            width: 100%;
+                            max-width: 700px;
+                            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+                        }
+
+                        .header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 25px; margin-bottom: 25px; }
+                        .brand h1 { font-size: 1.8rem; font-weight: 800; color: #fff; }
+                        .brand h1 span { color: #3b82f6; }
+                        .brand p { color: #9ca3af; font-size: 0.85rem; margin-top: 4px; }
+
+                        .devis-meta { text-align: right; }
+                        .badge { display: inline-block; background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.4); color: #60a5fa; font-weight: 600; font-size: 0.8rem; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; margin-bottom: 8px; }
+                        .devis-meta h2 { font-size: 1.2rem; color: #fff; }
+                        .devis-meta p { color: #9ca3af; font-size: 0.85rem; }
+
+                        .client-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 20px; margin-bottom: 30px; }
+                        .client-card h3 { font-size: 0.85rem; text-transform: uppercase; color: #60a5fa; letter-spacing: 1px; margin-bottom: 10px; }
+                        .client-card p { color: #f3f4f6; font-size: 1rem; margin-bottom: 4px; }
+                        .client-card p strong { color: #9ca3af; font-size: 0.9rem; }
+
+                        table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+                        th { background: rgba(255, 255, 255, 0.05); text-align: left; padding: 12px 16px; color: #9ca3af; font-size: 0.85rem; border-radius: 8px 8px 0 0; }
+                        td { padding: 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); color: #f3f4f6; font-size: 0.95rem; }
+                        .total-row td { border-bottom: none; font-size: 1.2rem; font-weight: 800; color: #3b82f6; text-align: right; }
+
+                        .notes-card { background: rgba(255, 255, 255, 0.02); border-left: 3px solid #3b82f6; padding: 15px; border-radius: 0 8px 8px 0; margin-bottom: 30px; }
+                        .notes-card p { color: #9ca3af; font-size: 0.88rem; }
+
+                        .footer { text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 20px; color: #9ca3af; font-size: 0.8rem; }
+                    </style>
+                </head>
+                <body>
+
+                    <div class="action-bar">
+                        <button class="btn-action btn-secondary" onclick="window.print()">Imprimer</button>
+                        <button class="btn-action" onclick="downloadPDF()">Télécharger en PDF</button>
+                    </div>
+
+                    <div class="devis-container" id="devis-content">
+                        <div class="header">
+                            <div class="brand">
+                                <h1>VIPER <span>CLEAN</span></h1>
+                                <p>Soin Automobile Haute Précision</p>
+                                <p>Contact : 07 50 01 15 03</p>
+                            </div>
+                            <div class="devis-meta">
+                                <span class="badge">Devis Officiel</span>
+                                <h2>${quoteNumber}</h2>
+                                <p>Date : ${currentDate}</p>
+                            </div>
+                        </div>
+
+                        <div class="client-card">
+                            <h3>Informations Client</h3>
+                            <p><strong>Nom :</strong> ${client}</p>
+                            <p><strong>Téléphone :</strong> ${phone || 'Non renseigné'}</p>
+                        </div>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>PRESTATION</th>
+                                    <th style="text-align: right;">MONTANT TTC</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>${service}</td>
+                                    <td style="text-align: right; font-weight: 600;">${amount} €</td>
+                                </tr>
+                                <tr class="total-row">
+                                    <td style="color: #9ca3af; font-size: 0.9rem; text-align: left;">TOTAL À PAYER</td>
+                                    <td>${amount} €</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="notes-card">
+                            <p><strong>Remarques / Options :</strong> ${notes || 'Aucune remarque particulière.'}</p>
+                        </div>
+
+                        <div class="footer">
+                            <p>VIPER Clean — Service de Nettoyage et Rénovation Automobile</p>
+                            <p>Merci pour votre confiance !</p>
+                        </div>
+                    </div>
+
+                    <script>
+                        function downloadPDF() {
+                            const element = document.getElementById('devis-content');
+                            const opt = {
+                                margin:       0.3,
+                                filename:     'Devis_VIPER_CLEAN_${client.replace(/[^a-zA-Z0-9]/g, '_')}.pdf',
+                                image:        { type: 'jpeg', quality: 0.98 },
+                                html2canvas:  { scale: 2, backgroundColor: '#0a0c10' },
+                                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+                            };
+                            html2pdf().set(opt).from(element).save();
+                        }
+                    <\/script>
+
+                </body>
+                </html>
+            `);
+            printWin.document.close();
+        });
+
+        // Formulaire de réservation EmailJS
         document.getElementById('booking-form').addEventListener('submit', function(event) {
             event.preventDefault();
             
@@ -682,10 +1008,8 @@
             const adminTemplateID = 'template_svshwyv';
             const clientTemplateID = 'template_0ya3ily';
 
-            // 1. Envoi du mail pour TOI
             emailjs.sendForm(serviceID, adminTemplateID, this)
                 .then(() => {
-                    // 2. Envoi du mail de confirmation pour LE CLIENT
                     return emailjs.sendForm(serviceID, clientTemplateID, this);
                 })
                 .then(() => {
